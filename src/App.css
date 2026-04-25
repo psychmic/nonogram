@@ -1,20 +1,26 @@
+.grid {
+    --cell-size: 40px;
+    --cell-color: #bdcaff;
+    --border-color: #5f657b;
+}
+
 .row {
     display: flex;
 }
 
 .cell {
+    height: var(--cell-size);
+    width: var(--cell-size);
+    color: var(--cell-color);
+    font-weight: bold;
+    font-size: 24px;
+    border: 1px solid var(--border-color);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 24px;
-    --cell-size: 40px;
-    height: var(--cell-size);
-    width: var(--cell-size);
-    border: 1px solid grey;
 }
 
 .filled {
-    background: white;
+    background: var(--cell-color);
 }
