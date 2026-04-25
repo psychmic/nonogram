@@ -1,41 +1,33 @@
-import { useState } from "react";
 import type { MouseEvent } from "react";
 
 type CellParamsType = {
-    mouseButton: number,
+    cellValue: number,
+    setCellValue: (value: number) => void,
     isMouseDown: boolean,
+    mouseButton: number,
 }
 
-function Cell({ mouseButton, isMouseDown }: CellParamsType) {
-    const [value, setValue] = useState(0);
-
-    let styles;
-    if (value === 1) styles = {background: "black"};
-    if (value === -1) styles = {background: "white"};
-
-    function fillCell() {
-        return value === 1 ? setValue(0) : setValue(1);
-    }
-    function blockCell() {
-        return value === -1 ? setValue(0) : setValue(-1);
-    }
+function Cell({ cellValue, setCellValue, mouseButton, isMouseDown }: CellParamsType) {
+    const fillCell = () => cellValue === 1 ? setCellValue(0) : setCellValue(1);
+    const blockCell = () => cellValue === -1 ? setCellValue(0) : setCellValue(-1);
 
     function handleMouseDown(event: MouseEvent) {
+        event.preventDefault();
         if (event.button === 0) fillCell();
         if (event.button === 2) blockCell();
     }
+
     function handleMouseOver() {
         if (isMouseDown && mouseButton === 0) fillCell();
         if (isMouseDown && mouseButton === 2) blockCell();
     }
 
     return (
-        <div 
-            className="cell"
-            style={styles}
+        <div
+            className={`cell ${cellValue === 1 ? "filled" : ""}`}
             onMouseDown={handleMouseDown}
             onMouseOver={handleMouseOver}
-        ></div>
+        >{cellValue === -1 ? "X" : ""}</div>
     );
 }
 
