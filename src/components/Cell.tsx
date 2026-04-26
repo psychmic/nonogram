@@ -11,9 +11,7 @@ function Cell({ cellValue, setCellValue, mouseButton, isMouseDown }: CellParamsT
     function fillCell(value: number, doOverride: boolean) {
         if (cellValue === value) {
             setCellValue(0);
-        } else if(cellValue === 0) {
-            setCellValue(value);
-        } else if(doOverride) {
+        } else if(cellValue === 0 || doOverride) {
             setCellValue(value);
         }
     }

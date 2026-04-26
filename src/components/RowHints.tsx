@@ -1,5 +1,4 @@
 
-
 type RowHintsParamsType = {
     hints: number[][],
 }

@@ -1,11 +1,9 @@
 
-
 type ColomnHintsParamsType = {
     hints: number[][],
 }
 
 function ColomnHints({ hints }: ColomnHintsParamsType) {
-
     
     return (
         <div className="col-hints">

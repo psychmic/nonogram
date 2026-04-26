@@ -3,22 +3,13 @@ import type { MouseEvent } from "react";
 import Cell from "./Cell";
 
 type GridParamsType = {
-    height: number,
-    width: number,
+    gridState: number[][],
+    setCellValue: (rowIndex: number, cellIndex: number, value: number) => void,
 }
 
-function Grid({ height, width }: GridParamsType) {
-    const [gridState, setGridState] = useState(
-        Array.from({length: height}, () => Array.from({length: width}, () => 0))
-    );
+function Grid({ gridState, setCellValue }: GridParamsType) {
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [mouseButton, setMouseButton] = useState(0);
-
-    function setCellValue(rowIndex: number, cellIndex: number, value: number) {
-        const temp = [...gridState];
-        temp[rowIndex][cellIndex] = value;
-        setGridState(temp);
-    }
 
     function handleOnMouseDown(event: MouseEvent) {
         event.preventDefault();
