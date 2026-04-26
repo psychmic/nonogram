@@ -1,12 +1,12 @@
 import './App.css'
-import Grid from './components/Grid'
+import Nonogram from './components/Nonogram'
 
 function App() {
 
 
     return (
       <>
-        <Grid height={10} width={10}/>
+        <Nonogram />
       </>
     )
 }
