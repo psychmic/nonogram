@@ -8,18 +8,25 @@ type CellParamsType = {
 }
 
 function Cell({ cellValue, setCellValue, mouseButton, isMouseDown }: CellParamsType) {
-    const fillCell = () => cellValue === 1 ? setCellValue(0) : setCellValue(1);
-    const blockCell = () => cellValue === -1 ? setCellValue(0) : setCellValue(-1);
+    function fillCell(value: number, doOverride: boolean) {
+        if (cellValue === value) {
+            setCellValue(0);
+        } else if(cellValue === 0) {
+            setCellValue(value);
+        } else if(doOverride) {
+            setCellValue(value);
+        }
+    }
 
     function handleMouseDown(event: MouseEvent) {
         event.preventDefault();
-        if (event.button === 0) fillCell();
-        if (event.button === 2) blockCell();
+        if (event.button === 0) fillCell(1, true);
+        if (event.button === 2) fillCell(-1, true);
     }
 
     function handleMouseOver() {
-        if (isMouseDown && mouseButton === 0) fillCell();
-        if (isMouseDown && mouseButton === 2) blockCell();
+        if (isMouseDown && mouseButton === 0) fillCell(1, false);
+        if (isMouseDown && mouseButton === 2) fillCell(-1, false);
     }
 
     return (

@@ -30,6 +30,7 @@ function Grid({ height, width }: GridParamsType) {
         <div className="grid"
             onMouseDown={handleOnMouseDown}
             onMouseUp={() => setIsMouseDown(false)}
+            onMouseLeave={() => setIsMouseDown(false)}
             onContextMenu={(e) => e.preventDefault()}
         >
             {gridState.map((row, rowIndex) => 
