@@ -6,7 +6,7 @@ function App() {
 
     return (
       <>
-        <Nonogram width={15} height={15} />
+        <Nonogram initWidth={5} initHeight={5} />
       </>
     )
 }

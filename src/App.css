@@ -21,6 +21,7 @@
 .col-hints .hint-group {
     display: flex;
     flex-direction: column;
+    margin: 4px 0;
 }
 
 .row-hints {
@@ -35,14 +36,22 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    margin: 0 4px;
+}
+
+.hint-group {
+    background-color: #3f4b7a;
+    border-radius: 8px;
 }
 
 .hint-group .hint {
+    color: white;
+    font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--cell-size);
-    height: var(--cell-size);
+    width: 32px;
+    height: 32px;
 }
 
 .grid {
@@ -70,4 +79,15 @@
 
 .grid .filled {
     background: var(--cell-color);
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+}
+
+.controls button {
+    padding: 8px;
+    cursor: pointer;
 }

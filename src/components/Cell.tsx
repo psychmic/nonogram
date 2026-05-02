@@ -14,23 +14,21 @@ type CellParamsType = {
 }
 
 function Cell({ cellValue, setCellValue, mouseButton, isMouseDown, cellStyles }: CellParamsType) {
-    function fillCell(value: number, doOverride: boolean) {
-        if (cellValue === value) {
-            setCellValue(0);
-        } else if(cellValue === 0 || doOverride) {
+    function fillCell(value: number) {
+        if(cellValue === 0) {
             setCellValue(value);
         }
     }
 
     function handleMouseDown(event: MouseEvent) {
         event.preventDefault();
-        if (event.button === 0) fillCell(1, true);
-        if (event.button === 2) fillCell(-1, true);
+        if (event.button === 0) fillCell(1);
+        if (event.button === 2) fillCell(-1);
     }
 
     function handleMouseOver() {
-        if (isMouseDown && mouseButton === 0) fillCell(1, false);
-        if (isMouseDown && mouseButton === 2) fillCell(-1, false);
+        if (isMouseDown && mouseButton === 0) fillCell(1);
+        if (isMouseDown && mouseButton === 2) fillCell(-1);
     }
 
     return (

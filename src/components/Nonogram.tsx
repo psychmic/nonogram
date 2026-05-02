@@ -3,44 +3,44 @@ import ColomnHints from "./ColomnHints";
 import RowHints from "./RowHints";
 import Grid from "./Grid";
 import { createNonogram } from "../lib/generate";
+import Controls from "./Controls";
 
 type NonogramParamsType = {
-    width: number,
-    height: number,
+    initWidth: number,
+    initHeight: number,
 }
 
-function Nonogram({width, height}: NonogramParamsType) {
-    const generateEmptyBoard = () => Array.from({length: height}, () => Array.from({length: width}, () => 0));
+function Nonogram({initWidth, initHeight}: NonogramParamsType) {
+    const [mistakeCount, setMistakeCount] = useState(0);
+
+    const [width, setWidth] = useState(initWidth);
+    const [height, setHeight] = useState(initHeight);
+
+    const generateEmptyBoard = (w = width, h = height) => Array.from({length: h}, () => Array.from({length: w}, () => 0));
     
     const [answerNonogram, setAnswerNonogram] = useState(() => createNonogram(width, height));
     const [gridState, setGridState] = useState(() => generateEmptyBoard());
 
     function setCellValue(rowIndex: number, cellIndex: number, value: number) {
-        setGridState(prevGrid => 
-            prevGrid.map((row, rIdx) => 
-                rIdx === rowIndex 
-                    ? row.map((cell, cIdx) => (cIdx === cellIndex ? value : cell)) 
-                    : row
-            )
-        );
-    }
-
-    function clearBoard() {
-        setGridState(generateEmptyBoard());
-    }
-
-    function check() {
-        if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid)) {
-            console.log("Correct!");
+        if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid)) return;
+        if (answerNonogram.grid[rowIndex][cellIndex] === value) {
+            setGridState(prevGrid => 
+                prevGrid.map((row, rIdx) => 
+                    rIdx === rowIndex 
+                        ? row.map((cell, cIdx) => (cIdx === cellIndex ? value : cell)) 
+                        : row
+                )
+            );
         } else {
-            console.log("Wrong");
+            setMistakeCount(() => mistakeCount + 1);
         }
     }
 
-    function newGame() {
-        clearBoard();
-        setAnswerNonogram(createNonogram(width, height));
-        console.log("Generated new game!");
+    function newGame(newWidth: number, newHeight: number) {
+        setWidth(newWidth);
+        setHeight(newHeight);
+        setAnswerNonogram(createNonogram(newWidth, newHeight));
+        setGridState(generateEmptyBoard(newWidth, newHeight));
     }
 
     return (
@@ -50,9 +50,7 @@ function Nonogram({width, height}: NonogramParamsType) {
                 <RowHints hints={answerNonogram.rowHints} />
                 <Grid gridState={gridState} setCellValue={setCellValue} />
             </div>
-            <button className="clear-button button" onClick={clearBoard}>Clear</button>
-            <button className="check-button button" onClick={check}>Check</button>
-            <button className="new-button button" onClick={newGame}>New Game</button>
+            {(JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid)) && <Controls newGame={newGame}/>}
         </>
     );
 }
