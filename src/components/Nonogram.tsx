@@ -1,55 +1,58 @@
 import { useState } from "react";
 import ColomnHints from "./ColomnHints";
-import Grid from "./Grid";
 import RowHints from "./RowHints";
+import Grid from "./Grid";
+import { createNonogram } from "../lib/generate";
 
-function Nonogram() {
-    const [gridState, setGridState] = useState(
-        Array.from({length: 10}, () => Array.from({length: 10}, () => 0))
-    );
+type NonogramParamsType = {
+    width: number,
+    height: number,
+}
+
+function Nonogram({width, height}: NonogramParamsType) {
+    const generateEmptyBoard = () => Array.from({length: height}, () => Array.from({length: width}, () => 0));
+    
+    const [answerNonogram, setAnswerNonogram] = useState(() => createNonogram(width, height));
+    const [gridState, setGridState] = useState(() => generateEmptyBoard());
 
     function setCellValue(rowIndex: number, cellIndex: number, value: number) {
-        const temp = [...gridState];
-        temp[rowIndex][cellIndex] = value;
-        setGridState(temp);
+        setGridState(prevGrid => 
+            prevGrid.map((row, rIdx) => 
+                rIdx === rowIndex 
+                    ? row.map((cell, cIdx) => (cIdx === cellIndex ? value : cell)) 
+                    : row
+            )
+        );
     }
 
-    const rowHints = [
-        [4, 1, 1],
-        [4, 3, 1],
-        [1, 6],
-        [3, 3, 2],
-        [1, 4, 3],
-        [1, 1, 1, 2],
-        [2, 1, 1, 1],
-        [2, 3],
-        [2, 4, 1],
-        [1, 2, 1, 2],
-    ];
+    function clearBoard() {
+        setGridState(generateEmptyBoard());
+    }
 
-    const colHints = [
-        [2, 2, 1, 2],
-        [4, 4],
-        [2, 2, 1, 1],
-        [2, 3, 2],
-        [3, 1],
-        [6, 2],
-        [3, 3],
-        [3, 2, 1],
-        [4, 1, 1],
-        [4, 1, 2],
-    ];
+    function check() {
+        if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid)) {
+            console.log("Correct!");
+        } else {
+            console.log("Wrong");
+        }
+    }
+
+    function newGame() {
+        clearBoard();
+        setAnswerNonogram(createNonogram(width, height));
+        console.log("Generated new game!");
+    }
 
     return (
         <>
             <div className="nonogram">
-                <ColomnHints hints={colHints} />
-                <RowHints hints={rowHints} />
+                <ColomnHints hints={answerNonogram.colHints} />
+                <RowHints hints={answerNonogram.rowHints} />
                 <Grid gridState={gridState} setCellValue={setCellValue} />
             </div>
-            <button className="clear"
-                onClick={() => setGridState(Array.from({length: 10}, () => Array.from({length: 10}, () => 0)))}
-            >Reset</button>
+            <button className="clear-button button" onClick={clearBoard}>Clear</button>
+            <button className="check-button button" onClick={check}>Check</button>
+            <button className="new-button button" onClick={newGame}>New Game</button>
         </>
     );
 }

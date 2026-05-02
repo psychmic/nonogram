@@ -6,7 +6,7 @@ function App() {
 
     return (
       <>
-        <Nonogram />
+        <Nonogram width={15} height={15} />
       </>
     )
 }
