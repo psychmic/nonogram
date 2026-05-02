@@ -5,9 +5,15 @@ type CellParamsType = {
     setCellValue: (value: number) => void,
     isMouseDown: boolean,
     mouseButton: number,
+    cellStyles: {
+        borderTop: string,
+        borderRight: string,
+        borderBottom: string,
+        borderLeft: string,
+    },
 }
 
-function Cell({ cellValue, setCellValue, mouseButton, isMouseDown }: CellParamsType) {
+function Cell({ cellValue, setCellValue, mouseButton, isMouseDown, cellStyles }: CellParamsType) {
     function fillCell(value: number, doOverride: boolean) {
         if (cellValue === value) {
             setCellValue(0);
@@ -29,6 +35,7 @@ function Cell({ cellValue, setCellValue, mouseButton, isMouseDown }: CellParamsT
 
     return (
         <div
+            style={cellStyles}
             className={`cell ${cellValue === 1 ? "filled" : ""}`}
             onMouseDown={handleMouseDown}
             onMouseOver={handleMouseOver}

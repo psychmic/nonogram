@@ -61,7 +61,7 @@
     color: var(--cell-color);
     font-weight: bold;
     font-size: 24px;
-    border: 1px solid var(--border-color);
+    border: 1px dotted var(--border-color);
     display: flex;
     justify-content: center;
     align-items: center;
