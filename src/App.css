@@ -11,6 +11,14 @@
     padding: 20px;
 }
 
+.lives {
+    background-color: #3f4b7a;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .col-hints {
     grid-column: 2;
     display: flex;
