@@ -21,6 +21,9 @@ function Nonogram({initWidth, initHeight}: NonogramParamsType) {
     const [answerNonogram, setAnswerNonogram] = useState(() => createNonogram(width, height));
     const [gridState, setGridState] = useState(() => generateEmptyBoard());
 
+    const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
+    const [highlightedColumn, setHighlightedColumn] = useState<number | null>(null);
+
     function setCellValue(rowIndex: number, cellIndex: number, value: number) {
         if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid) || mistakeCount >= 3) return;
         if (answerNonogram.grid[rowIndex][cellIndex] !== value) setMistakeCount(() => mistakeCount + 1);
@@ -32,6 +35,14 @@ function Nonogram({initWidth, initHeight}: NonogramParamsType) {
                     : row
             )
         );
+    }
+
+    function updateHighlightedRow(value: number | null) {
+        setHighlightedRow(() => value);
+    }
+
+    function updateHighlightedColumn(value: number | null) {
+        setHighlightedColumn(() => value);
     }
 
     function newGame(newWidth: number, newHeight: number) {
@@ -60,9 +71,14 @@ function Nonogram({initWidth, initHeight}: NonogramParamsType) {
         <>
             <div className="nonogram">
                 <div className="lives">{displayLives()}</div>
-                <ColomnHints hints={answerNonogram.colHints} />
-                <RowHints hints={answerNonogram.rowHints} />
-                <Grid gridState={gridState} setCellValue={setCellValue} />
+                <ColomnHints hints={answerNonogram.colHints} highlightedColumn={highlightedColumn}/>
+                <RowHints hints={answerNonogram.rowHints} highlightedRow={highlightedRow}/>
+                <Grid 
+                    gridState={gridState} 
+                    setCellValue={setCellValue} 
+                    updateHighlightedRow={updateHighlightedRow} 
+                    updateHighlightedColumn={updateHighlightedColumn}
+                />
             </div>
             {(JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid) || mistakeCount >= 3) && <Controls newGame={newGame}/>}
         </>

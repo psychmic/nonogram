@@ -11,9 +11,10 @@ type CellParamsType = {
         borderBottom: string,
         borderLeft: string,
     },
+    updateHighlightedColumn: () => void,
 }
 
-function Cell({ cellValue, setCellValue, mouseButton, isMouseDown, cellStyles }: CellParamsType) {
+function Cell({ cellValue, setCellValue, mouseButton, isMouseDown, cellStyles, updateHighlightedColumn }: CellParamsType) {
     function fillCell(value: number) {
         if(cellValue === 0) {
             setCellValue(value);
@@ -29,6 +30,8 @@ function Cell({ cellValue, setCellValue, mouseButton, isMouseDown, cellStyles }:
     function handleMouseOver() {
         if (isMouseDown && mouseButton === 0) fillCell(1);
         if (isMouseDown && mouseButton === 2) fillCell(-1);
+
+        updateHighlightedColumn();
     }
 
     return (

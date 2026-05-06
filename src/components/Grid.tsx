@@ -5,9 +5,11 @@ import Cell from "./Cell";
 type GridParamsType = {
     gridState: number[][],
     setCellValue: (rowIndex: number, cellIndex: number, value: number) => void,
+    updateHighlightedRow: (value: number | null) => void,
+    updateHighlightedColumn: (value: number | null) => void,
 }
 
-function Grid({ gridState, setCellValue }: GridParamsType) {
+function Grid({ gridState, setCellValue, updateHighlightedRow, updateHighlightedColumn }: GridParamsType) {
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [mouseButton, setMouseButton] = useState(0);
 
@@ -42,11 +44,18 @@ function Grid({ gridState, setCellValue }: GridParamsType) {
         <div className="grid"
             onMouseDown={handleOnMouseDown}
             onMouseUp={() => setIsMouseDown(false)}
-            onMouseLeave={() => setIsMouseDown(false)}
+            onMouseLeave={() => {
+                setIsMouseDown(false)
+                updateHighlightedRow(null)
+                updateHighlightedColumn(null)
+            }}
             onContextMenu={(e) => e.preventDefault()}
         >
             {gridState.map((row, rowIndex) => 
-                <div className="row" key={rowIndex}>
+                <div className="row"
+                    onMouseEnter={() => updateHighlightedRow(rowIndex)} 
+                    key={rowIndex}
+                >
                     {row.map((cellValue, cellIndex) =>
                         <Cell
                             cellValue={cellValue}
@@ -54,6 +63,7 @@ function Grid({ gridState, setCellValue }: GridParamsType) {
                             isMouseDown={isMouseDown}
                             mouseButton={mouseButton}
                             cellStyles={cellStyles(rowIndex, cellIndex)}
+                            updateHighlightedColumn={() => updateHighlightedColumn(cellIndex)}
                             key={cellIndex}
                         />
                     )}
