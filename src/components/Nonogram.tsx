@@ -10,20 +10,17 @@ type NonogramParamsType = {
     initHeight: number,
 }
 
+const generateEmptyBoard = (width: number, height: number) => Array.from({length: height}, () => Array.from({length: width}, () => 0));
+
 function Nonogram({initWidth, initHeight}: NonogramParamsType) {
-    const [mistakeCount, setMistakeCount] = useState(0);
-
-    const [width, setWidth] = useState(initWidth);
-    const [height, setHeight] = useState(initHeight);
-
-    const generateEmptyBoard = (w = width, h = height) => Array.from({length: h}, () => Array.from({length: w}, () => 0));
+    const [answerNonogram, setAnswerNonogram] = useState(() => createNonogram(initWidth, initHeight));
+    const [gridState, setGridState] = useState(() => generateEmptyBoard(initWidth, initHeight));
     
-    const [answerNonogram, setAnswerNonogram] = useState(() => createNonogram(width, height));
-    const [gridState, setGridState] = useState(() => generateEmptyBoard());
-
     const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
     const [highlightedColumn, setHighlightedColumn] = useState<number | null>(null);
 
+    const [mistakeCount, setMistakeCount] = useState(0);
+    
     function setCellValue(rowIndex: number, cellIndex: number, value: number) {
         if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid) || mistakeCount >= 3) return;
         if (answerNonogram.grid[rowIndex][cellIndex] !== value) setMistakeCount(() => mistakeCount + 1);
@@ -37,18 +34,8 @@ function Nonogram({initWidth, initHeight}: NonogramParamsType) {
         );
     }
 
-    function updateHighlightedRow(value: number | null) {
-        setHighlightedRow(() => value);
-    }
-
-    function updateHighlightedColumn(value: number | null) {
-        setHighlightedColumn(() => value);
-    }
-
     function newGame(newWidth: number, newHeight: number) {
         setMistakeCount(0);
-        setWidth(newWidth);
-        setHeight(newHeight);
         setAnswerNonogram(createNonogram(newWidth, newHeight));
         setGridState(generateEmptyBoard(newWidth, newHeight));
     }
@@ -76,8 +63,8 @@ function Nonogram({initWidth, initHeight}: NonogramParamsType) {
                 <Grid 
                     gridState={gridState} 
                     setCellValue={setCellValue} 
-                    updateHighlightedRow={updateHighlightedRow} 
-                    updateHighlightedColumn={updateHighlightedColumn}
+                    updateHighlightedRow={(value: number | null) => setHighlightedRow(() => value)} 
+                    updateHighlightedColumn={(value: number | null) => setHighlightedColumn(() => value)}
                 />
             </div>
             {(JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid) || mistakeCount >= 3) && <Controls newGame={newGame}/>}
