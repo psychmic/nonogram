@@ -22,16 +22,48 @@ function Nonogram({initWidth, initHeight}: NonogramParamsType) {
     const [mistakeCount, setMistakeCount] = useState(0);
     
     function setCellValue(rowIndex: number, cellIndex: number, value: number) {
-        if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid) || mistakeCount >= 3) return;
-        if (answerNonogram.grid[rowIndex][cellIndex] !== value) setMistakeCount(() => mistakeCount + 1);
+    if (JSON.stringify(gridState) === JSON.stringify(answerNonogram.grid) || mistakeCount >= 3) return;
+    if (answerNonogram.grid[rowIndex][cellIndex] !== value) setMistakeCount(() => mistakeCount + 1);
 
-        setGridState(prevGrid => 
-            prevGrid.map((row, rIdx) => 
-                rIdx === rowIndex 
-                    ? row.map((cell, cIdx) => (cIdx === cellIndex ? answerNonogram.grid[rowIndex][cellIndex] : cell)) 
-                    : row
-            )
+    function updateGrid(prevGrid: number[][]) {
+        const newGrid = prevGrid.map((row, rIdx) => 
+            rIdx === rowIndex 
+                ? row.map((cell, cIdx) => (cIdx === cellIndex ? answerNonogram.grid[rowIndex][cellIndex] : cell)) 
+                : row
         );
+
+        // auto complete rows
+        const answerRow = answerNonogram.grid[rowIndex];
+        let rowIsFinished = true;
+        for (let i = 0; i < answerRow.length; i++) {
+            if (answerRow[i] === 1 && newGrid[rowIndex][i] !== 1) {
+                rowIsFinished = false;
+                break;
+            }
+        }
+        if (rowIsFinished) newGrid[rowIndex] = [...answerNonogram.grid[rowIndex]]; 
+
+        // auto complete columns
+        let colIsFinished = true;
+        for (let i = 0; i < answerNonogram.grid.length; i++) {
+            if (answerNonogram.grid[i][cellIndex] === 1 && newGrid[i][cellIndex] !== 1) {
+                colIsFinished = false;
+                break;
+            }
+        }
+        if (colIsFinished) {
+            for (let i = 0; i < answerNonogram.grid.length; i++) {
+                if (newGrid[i] === prevGrid[i]) {
+                    newGrid[i] = [...prevGrid[i]];
+                }
+                newGrid[i][cellIndex] = answerNonogram.grid[i][cellIndex];
+            }
+        }
+
+        return newGrid;
+    }
+
+        setGridState(prevGrid => updateGrid(prevGrid));
     }
 
     function newGame(newWidth: number, newHeight: number) {
